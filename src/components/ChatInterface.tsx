@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button-custom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowLeft, Send, Heart, Settings, MoreVertical } from "lucide-react";
+import { ArrowLeft, Send, Heart, Settings, MoreVertical, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
@@ -122,12 +122,12 @@ export function ChatInterface({
         <div className="space-y-4 pb-4">
           {messages.length === 0 && (
             <div className="text-center py-12">
-              <Heart className="w-12 h-12 mx-auto mb-4 text-primary animate-heartbeat" />
+              <MessageCircle className="w-10 h-10 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-lg font-semibold mb-2">
-                Olá! Sou {character.name} 💕
+                Conversa com {character.name}
               </h3>
               <p className="text-muted-foreground">
-                Comece nossa conversa mandando uma mensagem!
+                Comece sua conversa mandando uma mensagem
               </p>
             </div>
           )}
@@ -206,7 +206,7 @@ export function ChatInterface({
               className="flex-1"
             />
             <Button
-              variant="hero"
+              variant="default"
               size="sm"
               onClick={handleSend}
               disabled={!inputMessage.trim() || isSending || isTyping}

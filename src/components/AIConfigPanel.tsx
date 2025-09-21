@@ -113,10 +113,9 @@ export function AIConfigPanel({ config, onConfigUpdate, onClose }: AIConfigPanel
   return (
     <Card className="max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gradient">
-          <Settings className="w-6 h-6" />
+        <CardTitle className="flex items-center gap-2">
+          <Settings className="w-5 h-5" />
           Configurações de IA
-          <Zap className="w-6 h-6" />
         </CardTitle>
         <p className="text-muted-foreground">
           Configure as APIs de IA para roleplay sem censura ou com mínima censura
@@ -316,7 +315,7 @@ export function AIConfigPanel({ config, onConfigUpdate, onClose }: AIConfigPanel
         </Tabs>
 
         <div className="flex gap-4 mt-6">
-          <Button variant="hero" onClick={handleSave} className="flex-1">
+          <Button variant="default" onClick={handleSave} className="flex-1">
             Salvar Configurações
           </Button>
           <Button variant="outline" onClick={onClose}>

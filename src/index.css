@@ -2,49 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design system para aplicação de roleplay romântico e tecnológico
-Cores em HSL para gradientes suaves e animações
+/* Design system discreto e profissional
+Cores neutras e sutis para ambiente de trabalho
 */
 
 @layer base {
   :root {
     /* Backgrounds principais */
-    --background: 250 20% 4%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
     /* Cards e superfícies */
-    --card: 250 15% 8%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
     /* Popovers e overlays */
-    --popover: 250 15% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    /* Cores primárias - gradiente roxo/rosa romântico */
-    --primary: 280 100% 65%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 290 100% 75%;
+    /* Cores primárias - azul profissional discreto */
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 221.2 83.2% 53.3%;
 
-    /* Cores secundárias - azul tech */
-    --secondary: 210 100% 60%;
-    --secondary-foreground: 0 0% 100%;
+    /* Cores secundárias - cinza neutro */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     /* Cores mutadas e de apoio */
-    --muted: 250 10% 15%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    /* Cor de destaque - rosa vibrante */
-    --accent: 320 100% 70%;
-    --accent-foreground: 0 0% 100%;
+    /* Cor de destaque - azul suave */
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     /* Cores de perigo */
-    --destructive: 0 100% 65%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
     /* Bordas e inputs */
-    --border: 250 15% 20%;
-    --input: 250 15% 18%;
-    --ring: 280 100% 70%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
 
     --radius: 0.5rem;
 
@@ -75,7 +75,7 @@ Cores em HSL para gradientes suaves e animações
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -92,7 +92,7 @@ Cores em HSL para gradientes suaves e animações
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 217.2 91.2% 59.8%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -114,52 +114,45 @@ Cores em HSL para gradientes suaves e animações
   }
 }
 
-/* Gradientes personalizados para a aplicação */
+/* Gradientes discretos e sutis */
 @layer utilities {
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
   }
   
   .gradient-romantic {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    background: hsl(var(--primary));
   }
   
   .gradient-tech {
-    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--primary)));
+    background: hsl(var(--secondary));
   }
   
   .gradient-glow {
-    background: linear-gradient(135deg, 
-      hsl(var(--primary) / 0.8), 
-      hsl(var(--accent) / 0.6), 
-      hsl(var(--secondary) / 0.4)
-    );
+    background: hsl(var(--muted));
   }
   
   .shadow-glow {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.1);
   }
   
   .shadow-romantic {
-    box-shadow: 0 20px 40px hsl(var(--accent) / 0.2);
+    box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
   }
   
   .text-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: hsl(var(--primary));
   }
 }
 
-/* Animações customizadas */
+/* Animações sutis e discretas */
 @layer utilities {
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    /* Removido - muito chamativo */
   }
   
   .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite alternate;
+    /* Removido - muito chamativo */
   }
   
   .animate-typing {
@@ -167,27 +160,12 @@ Cores em HSL para gradientes suaves e animações
   }
   
   .animate-heartbeat {
-    animation: heartbeat 1.5s ease-in-out infinite;
+    /* Removido - muito chamativo */
   }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes pulse-glow {
-  0% { box-shadow: 0 0 20px hsl(var(--primary) / 0.4); }
-  100% { box-shadow: 0 0 40px hsl(var(--primary) / 0.8); }
-}
-
 @keyframes typing {
-  0% { opacity: 0.3; }
+  0% { opacity: 0.4; }
   50% { opacity: 1; }
-  100% { opacity: 0.3; }
-}
-
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  100% { opacity: 0.4; }
 }

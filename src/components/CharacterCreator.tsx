@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Slider } from "@/components/ui/slider";
-import { Heart, Plus, X, Upload, Sparkles } from "lucide-react";
+import { Heart, Plus, X, Upload, Sparkles, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -133,10 +133,9 @@ DIRETRIZES IMPORTANTES:
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2 text-gradient">
-          <Heart className="w-6 h-6" />
+        <CardTitle className="flex items-center justify-center gap-2">
+          <Settings className="w-5 h-5" />
           {character ? 'Editar Personagem' : 'Criar Novo Personagem'}
-          <Sparkles className="w-6 h-6" />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -330,8 +329,8 @@ DIRETRIZES IMPORTANTES:
 
           {/* Botões */}
           <div className="flex gap-4">
-            <Button type="submit" variant="hero" className="flex-1">
-              <Heart className="w-4 h-4 mr-2" />
+            <Button type="submit" variant="default" className="flex-1">
+              <Settings className="w-4 h-4 mr-2" />
               {character ? 'Atualizar' : 'Criar'} Personagem
             </Button>
             <Button type="button" variant="outline" onClick={onCancel}>

@@ -16,12 +16,12 @@ interface CharacterCardProps {
 export function CharacterCard({ character, onChatStart, onEdit, onDelete }: CharacterCardProps) {
   const getStyleFromConversationStyle = (style: Character['conversationStyle']) => {
     const styles = {
-      romantic: "gradient-romantic",
-      friendly: "bg-secondary",
-      flirty: "gradient-primary", 
-      mysterious: "bg-muted",
-      caring: "bg-accent/20",
-      playful: "gradient-tech"
+      romantic: "bg-card border-primary/20",
+      friendly: "bg-card border-border",
+      flirty: "bg-card border-primary/20", 
+      mysterious: "bg-muted/50 border-border",
+      caring: "bg-accent/5 border-border",
+      playful: "bg-card border-border"
     };
     return styles[style] || "bg-card";
   };
@@ -41,7 +41,7 @@ export function CharacterCard({ character, onChatStart, onEdit, onDelete }: Char
 
   return (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-romantic border-border/50",
+      "group relative overflow-hidden transition-colors hover:border-primary/50 border-border/50",
       getStyleFromConversationStyle(character.conversationStyle)
     )}>
       <CardContent className="p-6">
@@ -54,7 +54,7 @@ export function CharacterCard({ character, onChatStart, onEdit, onDelete }: Char
               </AvatarFallback>
             </Avatar>
             {character.lastChatAt && new Date().getTime() - character.lastChatAt.getTime() < 24 * 60 * 60 * 1000 && (
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-pulse-glow" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full" />
             )}
           </div>
 
@@ -80,12 +80,12 @@ export function CharacterCard({ character, onChatStart, onEdit, onDelete }: Char
 
             <div className="flex gap-2">
               <Button
-                variant="hero"
+                variant="default"
                 size="sm"
                 className="flex-1"
                 onClick={() => onChatStart(character)}
               >
-                <Heart className="w-4 h-4 mr-2" />
+                <MessageCircle className="w-4 h-4 mr-2" />
                 Conversar
               </Button>
               <Button

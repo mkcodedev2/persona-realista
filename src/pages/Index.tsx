@@ -274,95 +274,79 @@ const Index = () => {
       default:
         return (
           <div className="min-h-screen bg-background">
-            {/* Hero Section */}
-            <div className="relative overflow-hidden">
-              <div 
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage: `url(${heroImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              />
-              <div className="gradient-glow absolute inset-0 opacity-60" />
-              
-              <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-                <div className="max-w-4xl mx-auto">
-                  <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-float">
-                    <span className="text-gradient">Roleplay</span>
-                    <br />
-                    <span className="text-foreground">com IA</span>
+            {/* Header discreto */}
+            <div className="border-b bg-card">
+              <div className="container mx-auto px-4 py-8">
+                <div className="max-w-4xl mx-auto text-center">
+                  <h1 className="text-4xl font-bold mb-4 text-foreground">
+                    Chat Inteligente
                   </h1>
                   
-                  <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-                    Crie personagens únicos e tenha conversas realistas com IA avançada.
-                    <br />
-                    <span className="text-gradient font-semibold">Relacionamentos virtuais sem limites.</span>
+                  <p className="text-lg text-muted-foreground mb-6">
+                    Converse com personagens personalizados usando IA avançada
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
                     <Button 
-                      variant="hero" 
-                      size="xl"
+                      variant="default" 
                       onClick={() => setCurrentView('create')}
-                      className="animate-pulse-glow"
                     >
-                      <Plus className="w-6 h-6 mr-2" />
-                      Criar Primeiro Personagem
+                      <Plus className="w-4 h-4 mr-2" />
+                      Novo Personagem
                     </Button>
                     <Button 
                       variant="outline" 
-                      size="xl"
                       onClick={() => setCurrentView('config')}
                     >
-                      <Settings className="w-6 h-6 mr-2" />
-                      Configurar IA
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configurações
                     </Button>
                   </div>
 
-                  {/* Stats */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-gradient mb-2">{characters.length}</div>
-                      <div className="text-muted-foreground">Personagens</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-gradient mb-2">
-                        {chatSessions.reduce((total, session) => total + session.messages.length, 0)}
+                  {/* Stats simples */}
+                  {characters.length > 0 && (
+                    <div className="grid grid-cols-3 gap-4 max-w-md mx-auto text-sm text-muted-foreground">
+                      <div className="text-center">
+                        <div className="font-semibold text-foreground">{characters.length}</div>
+                        <div>Personagens</div>
                       </div>
-                      <div className="text-muted-foreground">Mensagens</div>
+                      <div className="text-center">
+                        <div className="font-semibold text-foreground">
+                          {chatSessions.reduce((total, session) => total + session.messages.length, 0)}
+                        </div>
+                        <div>Mensagens</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-foreground">
+                          {chatSessions.length}
+                        </div>
+                        <div>Conversas</div>
+                      </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-gradient mb-2">∞</div>
-                      <div className="text-muted-foreground">Possibilidades</div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Characters Section */}
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 py-8">
               {characters.length > 0 ? (
                 <>
-                  <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-6 h-6 text-primary" />
-                      <h2 className="text-3xl font-bold">Seus Personagens</h2>
-                    </div>
+                  <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h2 className="text-2xl font-semibold">Personagens</h2>
                     
                     <div className="flex gap-3 w-full md:w-auto">
                       <div className="relative flex-1 md:w-80">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
-                          placeholder="Buscar personagens..."
+                          placeholder="Buscar..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="pl-10"
                         />
                       </div>
                       <Button 
-                        variant="romantic" 
+                        variant="outline" 
                         onClick={() => setCurrentView('create')}
                       >
                         <Plus className="w-4 h-4 md:mr-2" />
@@ -371,7 +355,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {filteredCharacters.map(character => (
                       <CharacterCard
                         key={character.id}
@@ -388,56 +372,35 @@ const Index = () => {
 
                   {filteredCharacters.length === 0 && searchQuery && (
                     <div className="text-center py-12">
-                      <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-lg text-muted-foreground">
-                        Nenhum personagem encontrado para "{searchQuery}"
+                      <Search className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">
+                        Nenhum resultado para "{searchQuery}"
                       </p>
                     </div>
                   )}
                 </>
               ) : (
-                <Card className="max-w-md mx-auto text-center p-8">
+                <Card className="max-w-md mx-auto text-center p-6">
                   <CardHeader>
-                    <Sparkles className="w-16 h-16 mx-auto mb-4 text-primary animate-pulse-glow" />
-                    <CardTitle className="text-2xl">Comece Sua Jornada</CardTitle>
+                    <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                    <CardTitle className="text-xl">Começar</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground">
-                      Crie seu primeiro personagem e comece conversas incríveis com IA!
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      Crie seu primeiro personagem para começar as conversas
                     </p>
                     <Button 
-                      variant="hero" 
+                      variant="default" 
                       onClick={() => setCurrentView('create')}
                       className="w-full"
                     >
-                      <Heart className="w-5 h-5 mr-2" />
+                      <Plus className="w-4 h-4 mr-2" />
                       Criar Personagem
                     </Button>
                   </CardContent>
                 </Card>
               )}
             </div>
-
-            {/* Footer */}
-            <footer className="border-t bg-muted/30 mt-20">
-              <div className="container mx-auto px-4 py-8 text-center">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Heart className="w-5 h-5 text-primary" />
-                  <span className="font-semibold">Roleplay com IA</span>
-                  <Zap className="w-5 h-5 text-primary" />
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Relacionamentos virtuais realistas powered by AI
-                </p>
-                <div className="flex justify-center gap-4 mt-4 text-xs text-muted-foreground">
-                  <span>Português BR</span>
-                  <span>•</span>
-                  <span>Sem Censura</span>
-                  <span>•</span>
-                  <span>Personalização Total</span>
-                </div>
-              </div>
-            </footer>
           </div>
         );
     }
