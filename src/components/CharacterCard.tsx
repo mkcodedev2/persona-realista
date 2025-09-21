@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button-custom";
-import { Heart, MessageCircle, Settings, Trash2 } from "lucide-react";
+import { Heart, MessageCircle, Settings, Trash2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CharacterCardProps {
@@ -11,9 +11,11 @@ interface CharacterCardProps {
   onChatStart: (character: Character) => void;
   onEdit: (character: Character) => void;
   onDelete: (character: Character) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (characterId: string) => void;
 }
 
-export function CharacterCard({ character, onChatStart, onEdit, onDelete }: CharacterCardProps) {
+export function CharacterCard({ character, onChatStart, onEdit, onDelete, isFavorite, onToggleFavorite }: CharacterCardProps) {
   const getStyleFromConversationStyle = (style: Character['conversationStyle']) => {
     const styles = {
       romantic: "bg-card border-primary/20",
@@ -59,12 +61,17 @@ export function CharacterCard({ character, onChatStart, onEdit, onDelete }: Char
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-foreground truncate">{character.name}</h3>
-              <Badge variant="secondary" className="text-xs">
-                {character.conversationStyle}
-              </Badge>
-            </div>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold text-foreground truncate">{character.name}</h3>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-xs">
+                    {character.conversationStyle}
+                  </Badge>
+                  {isFavorite && (
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  )}
+                </div>
+              </div>
             
             <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
               {character.personality}
@@ -95,6 +102,15 @@ export function CharacterCard({ character, onChatStart, onEdit, onDelete }: Char
               >
                 <Settings className="w-4 h-4" />
               </Button>
+              {onToggleFavorite && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onToggleFavorite(character.id)}
+                >
+                  <Star className={cn("w-4 h-4", isFavorite ? "text-yellow-500 fill-current" : "text-muted-foreground")} />
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="sm"

@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { Character, Message, ChatSession, AIConfig } from "@/types/character";
+import { ConversationHistory as ConversationHistoryType, UserSettings } from "@/types/settings";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { CharacterCard } from "@/components/CharacterCard";
 import { CharacterCreator } from "@/components/CharacterCreator";
 import { ChatInterface } from "@/components/ChatInterface";
 import { AIConfigPanel } from "@/components/AIConfigPanel";
+import { ConversationHistory } from "@/components/ConversationHistory";
+import { UserSettings as UserSettingsComponent } from "@/components/UserSettings";
+import { StatsPanel } from "@/components/StatsPanel";
+import { CharacterImportExport } from "@/components/CharacterImportExport";
 import { AIService } from "@/services/aiService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button-custom";
@@ -18,7 +23,12 @@ import {
   Sparkles, 
   MessageCircle,
   Users,
-  Zap
+  Zap,
+  History,
+  BarChart3,
+  Package,
+  Menu,
+  Star
 } from "lucide-react";
 import { toast } from "sonner";
 import heroImage from "@/assets/hero-romantic-ai.webp";
@@ -26,11 +36,24 @@ import exampleAvatar1 from "@/assets/example-avatar-1.webp";
 import exampleAvatar2 from "@/assets/example-avatar-2.webp";
 import { v4 as uuidv4 } from 'uuid';
 
-type ViewMode = 'home' | 'create' | 'edit' | 'chat' | 'config';
+type ViewMode = 'home' | 'create' | 'edit' | 'chat' | 'config' | 'history' | 'settings' | 'stats' | 'import-export';
 
 const Index = () => {
   const [characters, setCharacters] = useLocalStorage<Character[]>("roleplay-characters", []);
   const [chatSessions, setChatSessions] = useLocalStorage<ChatSession[]>("roleplay-chat-sessions", []);
+  const [conversationHistory, setConversationHistory] = useLocalStorage<ConversationHistoryType[]>("conversation-history", []);
+  const [favoriteCharacters, setFavoriteCharacters] = useLocalStorage<string[]>("favorite-characters", []);
+  const [userSettings, setUserSettings] = useLocalStorage<UserSettings>("user-settings", {
+    theme: 'system',
+    autoSave: true,
+    maxMessagesInMemory: 50,
+    defaultTemperature: 0.8,
+    defaultMaxTokens: 1000,
+    showTypingIndicator: true,
+    soundEnabled: false,
+    compactMode: false,
+    language: 'pt-BR'
+  });
   const [aiConfig, setAiConfig] = useLocalStorage<AIConfig>("roleplay-ai-config", {
     selectedModel: "openrouter/auto",
     temperature: 0.8,
@@ -152,6 +175,16 @@ const Index = () => {
     setCurrentView('chat');
   };
 
+  const handleToggleFavorite = (characterId: string) => {
+    setFavoriteCharacters(prev => {
+      if (prev.includes(characterId)) {
+        return prev.filter(id => id !== characterId);
+      } else {
+        return [...prev, characterId];
+      }
+    });
+  };
+
   const handleSendMessage = async (content: string) => {
     if (!selectedCharacter) return;
 
@@ -206,6 +239,25 @@ const Index = () => {
         return [...filtered, session];
       });
 
+      // Atualizar histórico de conversas
+      const conversationTitle = newMessages[0]?.content.slice(0, 50) + "..." || "Nova conversa";
+      const historyEntry: ConversationHistoryType = {
+        id: sessionId,
+        characterId: selectedCharacter.id,
+        characterName: selectedCharacter.name,
+        title: conversationTitle,
+        messages: newMessages,
+        createdAt: session.createdAt,
+        lastMessageAt: session.lastMessageAt,
+        isFavorite: false,
+        messageCount: newMessages.length
+      };
+
+      setConversationHistory(prev => {
+        const filtered = prev.filter(h => h.characterId !== selectedCharacter.id);
+        return [...filtered, historyEntry];
+      });
+
       // Atualizar estatísticas do personagem
       setCharacters(prev => 
         prev.map(char => 
@@ -226,6 +278,91 @@ const Index = () => {
   const handleConfigUpdate = (newConfig: AIConfig) => {
     setAiConfig(newConfig);
     toast.success("Configuração da IA atualizada!");
+  };
+
+  const handleConversationSelect = (conversation: ConversationHistoryType) => {
+    const character = characters.find(c => c.id === conversation.characterId);
+    if (character) {
+      setSelectedCharacter(character);
+      setCurrentMessages(conversation.messages);
+      setCurrentView('chat');
+    }
+  };
+
+  const handleConversationDelete = (conversationId: string) => {
+    setConversationHistory(prev => prev.filter(c => c.id !== conversationId));
+    setChatSessions(prev => prev.filter(s => s.id !== conversationId));
+  };
+
+  const handleToggleConversationFavorite = (conversationId: string) => {
+    setConversationHistory(prev => 
+      prev.map(c => 
+        c.id === conversationId 
+          ? { ...c, isFavorite: !c.isFavorite }
+          : c
+      )
+    );
+  };
+
+  const handleExportData = () => {
+    const allData = {
+      version: "1.0",
+      exportDate: new Date().toISOString(),
+      characters,
+      chatSessions,
+      conversationHistory,
+      favoriteCharacters,
+      userSettings,
+      aiConfig
+    };
+
+    const dataStr = JSON.stringify(allData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `backup-completo-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success("Dados exportados com sucesso!");
+  };
+
+  const handleImportData = (data: any) => {
+    try {
+      if (data.characters) setCharacters(data.characters);
+      if (data.chatSessions) setChatSessions(data.chatSessions);
+      if (data.conversationHistory) setConversationHistory(data.conversationHistory);
+      if (data.favoriteCharacters) setFavoriteCharacters(data.favoriteCharacters);
+      if (data.userSettings) setUserSettings(data.userSettings);
+      if (data.aiConfig) setAiConfig(data.aiConfig);
+      
+      toast.success("Dados importados com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao importar dados");
+    }
+  };
+
+  const handleImportCharacters = (newCharacters: Character[]) => {
+    setCharacters(prev => [...prev, ...newCharacters]);
+  };
+
+  const handleClearAllData = () => {
+    setCharacters([]);
+    setChatSessions([]);
+    setConversationHistory([]);
+    setFavoriteCharacters([]);
+    setUserSettings({
+      theme: 'system',
+      autoSave: true,
+      maxMessagesInMemory: 50,
+      defaultTemperature: 0.8,
+      defaultMaxTokens: 1000,
+      showTypingIndicator: true,
+      soundEnabled: false,
+      compactMode: false,
+      language: 'pt-BR'
+    });
+    toast.success("Todos os dados foram deletados");
   };
 
   const renderCurrentView = () => {
@@ -259,6 +396,48 @@ const Index = () => {
             onBack={() => setCurrentView('home')}
             onSettingsOpen={() => setCurrentView('config')}
             isTyping={isTyping}
+          />
+        );
+
+      case 'history':
+        return (
+          <ConversationHistory
+            conversations={conversationHistory}
+            characters={characters}
+            onConversationSelect={handleConversationSelect}
+            onConversationDelete={handleConversationDelete}
+            onToggleFavorite={handleToggleConversationFavorite}
+            onBack={() => setCurrentView('home')}
+          />
+        );
+
+      case 'settings':
+        return (
+          <UserSettingsComponent
+            settings={userSettings}
+            onSettingsUpdate={setUserSettings}
+            onBack={() => setCurrentView('home')}
+            onClearAllData={handleClearAllData}
+            onExportData={handleExportData}
+            onImportData={handleImportData}
+          />
+        );
+
+      case 'stats':
+        return (
+          <StatsPanel
+            characters={characters}
+            chatSessions={chatSessions}
+            onBack={() => setCurrentView('home')}
+          />
+        );
+
+      case 'import-export':
+        return (
+          <CharacterImportExport
+            characters={characters}
+            onImportCharacters={handleImportCharacters}
+            onBack={() => setCurrentView('home')}
           />
         );
 
@@ -299,7 +478,47 @@ const Index = () => {
                       onClick={() => setCurrentView('config')}
                     >
                       <Settings className="w-4 h-4 mr-2" />
-                      Configurações
+                      Configurações IA
+                    </Button>
+                  </div>
+
+                  {/* Menu de navegação */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentView('history')}
+                      className="flex flex-col gap-1 h-auto py-3"
+                    >
+                      <History className="w-5 h-5" />
+                      <span className="text-xs">Histórico</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentView('stats')}
+                      className="flex flex-col gap-1 h-auto py-3"
+                    >
+                      <BarChart3 className="w-5 h-5" />
+                      <span className="text-xs">Estatísticas</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentView('import-export')}
+                      className="flex flex-col gap-1 h-auto py-3"
+                    >
+                      <Package className="w-5 h-5" />
+                      <span className="text-xs">Import/Export</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentView('settings')}
+                      className="flex flex-col gap-1 h-auto py-3"
+                    >
+                      <Settings className="w-5 h-5" />
+                      <span className="text-xs">Configurações</span>
                     </Button>
                   </div>
 
@@ -366,6 +585,8 @@ const Index = () => {
                           setCurrentView('edit');
                         }}
                         onDelete={handleDeleteCharacter}
+                        isFavorite={favoriteCharacters.includes(character.id)}
+                        onToggleFavorite={handleToggleFavorite}
                       />
                     ))}
                   </div>
