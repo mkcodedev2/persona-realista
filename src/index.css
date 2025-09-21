@@ -2,39 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Design system para aplicação de roleplay romântico e tecnológico
+Cores em HSL para gradientes suaves e animações
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Backgrounds principais */
+    --background: 250 20% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Cards e superfícies */
+    --card: 250 15% 8%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popovers e overlays */
+    --popover: 250 15% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Cores primárias - gradiente roxo/rosa romântico */
+    --primary: 280 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 290 100% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Cores secundárias - azul tech */
+    --secondary: 210 100% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Cores mutadas e de apoio */
+    --muted: 250 10% 15%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Cor de destaque - rosa vibrante */
+    --accent: 320 100% 70%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Cores de perigo */
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Bordas e inputs */
+    --border: 250 15% 20%;
+    --input: 250 15% 18%;
+    --ring: 280 100% 70%;
 
     --radius: 0.5rem;
 
@@ -102,4 +112,82 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Gradientes personalizados para a aplicação */
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  }
+  
+  .gradient-romantic {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  }
+  
+  .gradient-tech {
+    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--primary)));
+  }
+  
+  .gradient-glow {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.8), 
+      hsl(var(--accent) / 0.6), 
+      hsl(var(--secondary) / 0.4)
+    );
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
+  }
+  
+  .shadow-romantic {
+    box-shadow: 0 20px 40px hsl(var(--accent) / 0.2);
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Animações customizadas */
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-typing {
+    animation: typing 1.5s steps(10, end) infinite;
+  }
+  
+  .animate-heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 20px hsl(var(--primary) / 0.4); }
+  100% { box-shadow: 0 0 40px hsl(var(--primary) / 0.8); }
+}
+
+@keyframes typing {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
